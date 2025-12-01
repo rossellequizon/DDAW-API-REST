@@ -1,10 +1,19 @@
 # SAE – Développement & Déploiement d’une Application Web RESTful  
 ### Projet en cours — Sup Galilée (DDAW)
 
-Ce dépôt contient notre projet réalisé dans le cadre de la **SAE “Développement et Déploiement d’une Application Web RESTful Conteneurisée”**.  
-L’objectif est de concevoir une **API web complète**, conteneurisée avec Docker et connectée à une base de données relationnelle, en appliquant de bonnes pratiques de développement.
+Cette application expose une API REST permettant de gérer un mini-système de tickets inspiré de JIRA :
 
-## Objectif du projet
+* gestion des utilisateurs et de leur profil associé,
+* gestion des projets,
+* gestion des tickets,
+* gestion des commentaires,
+* gestion des tags (relation many-to-many).
+
+Le projet utilise Java 17, Spring Boot 4, Spring Data JPA et une base MySQL.
+
+---
+
+## Objectifs du projet
 
 Développer une application web disposant :
 
@@ -12,3 +21,88 @@ Développer une application web disposant :
 - d’une **base de données MySQL** ;
 - d’un **ORM** pour gérer la persistance ;
 - d’une **architecture conteneurisée** via Docker & Docker Compose.
+
+---
+
+## 1. Technologies utilisées
+
+* Java 17
+* Spring Boot 4
+* Spring Web
+* Spring Data JPA
+* MySQL
+* Maven
+
+Script SQL : `src/main/resources/JIRA.sql`
+
+---
+
+## 2. Modèle de données
+
+Le schéma SQL définit les entités suivantes :
+
+* Utilisateur (avec un Profil en relation 1–1)
+* Projet (avec un propriétaire)
+* Ticket (lié à un projet, un créateur, un assigné)
+* Commentaire (lié à un ticket)
+* Tag (many-to-many avec Ticket)
+
+Les entités Java sont situées dans :
+`src/main/java/com/api/jira/Entities/`
+
+---
+
+## 3. Lancement du projet
+
+Configurer MySQL dans `application.properties`, puis :
+
+```bash
+./mvnw spring-boot:run
+```
+
+L’API est disponible sur :
+
+```
+http://localhost:8080
+```
+
+---
+
+## 4. Principales routes disponibles
+
+### Utilisateurs (`/utilisateurs`)
+
+* POST, GET, GET/{id}, PUT/{id}, DELETE/{id}
+* GET /{id}/projets
+* GET /{id}/tickets
+* GET /{id}/assigneticket
+
+### Projets (`/projet`)
+
+* POST, GET, GET/{id}, PUT/{id}, DELETE/{id}
+* PATCH /{id}/status
+* GET /{id}/tickets
+
+### Tickets (`/tickets`)
+
+* POST, GET, GET/{id}, PUT/{id}, DELETE/{id}
+* PATCH status / assign
+* Gestion des commentaires
+* Gestion des tags
+
+### Tags (`/tag`)
+
+* CRUD complet
+
+### Commentaires (`/commentaire`)
+
+* CRUD complet
+
+---
+
+## 5. Auteurs
+
+Projet réalisé par :
+
+* Merlina ARUL
+* Rosselle QUIZON
