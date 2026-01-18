@@ -1,10 +1,13 @@
 package com.api.jira.Entities;
+import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Data
 @Table(name = "tag")
 public class Tag {
     @Id
@@ -17,19 +20,9 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Tickets> tickets = new HashSet<>();
 
-    // getters / setters
-
-    public Set<Tickets> getTickets() {
-        return tickets;
+    public Tag() {
     }
-
-    public void setTickets(Set<Tickets> tickets) {
-        this.tickets = tickets;
-    }
-    public String getTagName() {
-        return tagName;
-    }
-    public void setTagName(String tagName) {
+    public Tag(String tagName) {
         this.tagName = tagName;
     }
 }

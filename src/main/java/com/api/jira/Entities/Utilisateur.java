@@ -1,10 +1,14 @@
 package com.api.jira.Entities;
 import jakarta.persistence.*;
+import jdk.jfr.DataAmount;
+import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
 @Table(name = "utilisateur")
 public class Utilisateur {
     @Id
@@ -22,91 +26,29 @@ public class Utilisateur {
     private String pwd;
 
     @Column(name = "ACTIF", nullable = false)
-    private boolean actif = true;
+    private Boolean actif = true;
 
 
-    @OneToOne(mappedBy = "utilisateurId", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "utilisateur", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Profil profil;
 
-    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL)
-    private List<Projet> projetPossedes;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Projet> projetPossedes= new ArrayList<>();
 
-    @OneToMany(mappedBy = "creatorId", cascade = CascadeType.ALL)
-    private List<Tickets> Creatorickets;
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Tickets> Creatorickets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "assigneId", cascade = CascadeType.ALL)
-    private List<Tickets> assigneTickets;
+    @OneToMany(mappedBy = "assigne", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Tickets> assigneTickets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "auteur", cascade = CascadeType.ALL)
-    private List<Commentaire> commentaire;
+    @OneToMany(mappedBy = "auteur", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Commentaire> commentaire = new ArrayList<>();
 
     public Utilisateur() {}
-    public Utilisateur(String username, String email, String pwd, boolean actif) {
+    public Utilisateur(String username, String email, String pwd, Boolean actif) {
         this.username = username;
         this.email = email;
         this.pwd = pwd;
         this.actif = actif;
-    }
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getPwd() {
-        return pwd;
-    }
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-    public boolean isActif() {
-        return actif;
-    }
-    public void setActif(boolean actif) {
-        this.actif = actif;
-    }
-
-    public Profil getProfil() {
-        return profil;
-    }
-
-    public void setProfil(Profil profil) {
-        this.profil = profil;
-    }
-    public List<Projet> getProjetPossede() {
-        return projetPossedes;
-    }
-    public void setProjetPossedes(List<Projet> projetPossedes) {
-        this.projetPossedes = projetPossedes;
-    }
-    public List<Tickets> getCreatorTickets() {
-        return Creatorickets;
-    }
-    public void setCreatorTickets(List<Tickets> Creatortickets) {
-        Creatortickets = Creatortickets;
-    }
-    public List<Tickets> getAssigneTicket() {
-        return assigneTickets;
-    }
-    public void setAssigneTickets(List<Tickets> assigneTickets) {
-        this.assigneTickets = assigneTickets;
-    }
-    public List<Commentaire> getCommentaire() {
-        return commentaire;
-    }
-    public void setCommentaire(List<Commentaire> commentaire) {
-        this.commentaire = commentaire;
     }
 }

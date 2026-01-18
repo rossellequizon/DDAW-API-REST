@@ -4,6 +4,7 @@ import com.api.jira.Entities.Projet;
 import com.api.jira.Entities.Status;
 import com.api.jira.Entities.Tickets;
 import com.api.jira.Repository.ProjetRepo;
+import com.api.jira.Service.ProjetService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -13,63 +14,50 @@ import java.util.List;
 @RequestMapping("/projet")
 public class ProjetController {
 
-    private final ProjetRepo projetRepo;
+    private final ProjetService projetService;
 
-    public ProjetController(ProjetRepo projetRepo) {
-        this.projetRepo = projetRepo;
+    public ProjetController(ProjetService projetService) {
+        this.projetService = projetService;
     }
 
     @PostMapping
     public Projet createProjet(@RequestBody Projet projet) {
-        if (projet.getCreationDate() == null) {
-            projet.setCreationDate(LocalDateTime.now());
-        }
-        return projetRepo.save(projet);
+        System.out.println("DEBUG projetName=" + projet.getProjetName());
+        System.out.println("DEBUG projetDescription=" + projet.getProjetDescription());
+        return projetService.createProjet(projet);
     }
 
     @GetMapping
     public List<Projet> getAllProjets() {
-        return projetRepo.findAll();
+        return projetService.getAllProjets();
     }
 
     @GetMapping("/{id}")
     public Projet getProjetById(@PathVariable Long id) {
-        return projetRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Projet non trouvé avec id " + id));
+        return projetService.getProjetById(id);
     }
 
     @PutMapping("/{id}")
     public Projet updateProjet(@PathVariable Long id,
                                @RequestBody Projet projetModifie) {
 
-        Projet projetExistant = getProjetById(id);
-
-        projetExistant.setProjetName(projetModifie.getProjetName());
-        projetExistant.setProjetDescription(projetModifie.getProjetDescription());
-        projetExistant.setProjetStatus(projetModifie.getProjetStatus());
-        projetExistant.setOwnerId(projetModifie.getOwnerId());
-
-        return projetRepo.save(projetExistant);
+        return  projetService.updateProjet(id, projetModifie);
     }
 
     @DeleteMapping("/{id}")
     public void deleteProjet(@PathVariable Long id) {
-        projetRepo.deleteById(id);
+        projetService.deleteProjet(id);
     }
 
 
     @PatchMapping("/{id}/status")
     public Projet updateProjetStatus(@PathVariable Long id,
                                      @RequestParam Status status) {
-
-        Projet projet = getProjetById(id);
-        projet.setProjetStatus(status);
-        return projetRepo.save(projet);
+        return projetService.updateStatus(id, status);
     }
 
     @GetMapping("/{id}/tickets")
     public List<Tickets> getTicketsByProjet(@PathVariable Long id) {
-        Projet projet = getProjetById(id);
-        return projet.getTickets();
+        return projetService.getTicketsByProjet(id);
     }
 }

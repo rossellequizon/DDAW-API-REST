@@ -1,7 +1,10 @@
 package com.api.jira.Entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "profil")
 public class Profil {
     @Id
@@ -16,47 +19,16 @@ public class Profil {
     private String metier;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "UTILISATEUR_ID", nullable = false, unique = true)
-    private Utilisateur utilisateurId;
+    private Utilisateur utilisateur;
 
     public Profil() {
     }
 
-    public Profil(Long id, String fullname, String metier, Utilisateur utilisateurId) {
-        this.id = id;
+    public Profil(String fullname, String metier, Utilisateur utilisateur) {
         this.fullname = fullname;
         this.metier = metier;
-        this.utilisateurId = utilisateurId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getMetier() {
-        return metier;
-    }
-    public void setMetier(String metier) {
-        this.metier = metier;
-    }
-
-    public Utilisateur getUtilisateur() {
-        return utilisateurId;
-    }
-
-    public void setUtilisateur(Utilisateur utilisateurId) {
-        this.utilisateurId = utilisateurId;
+        this.utilisateur = utilisateur;
     }
 }

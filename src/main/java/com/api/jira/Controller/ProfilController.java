@@ -2,6 +2,7 @@ package com.api.jira.Controller;
 
 import com.api.jira.Entities.Profil;
 import com.api.jira.Repository.ProfilRepo;
+import com.api.jira.Service.ProfilService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,40 +17,34 @@ public class ProfilController {
        modifier un profil
        supprimer le profil
     */
-    private final ProfilRepo profilRepo;
+    private final ProfilService profilService;
 
-    public ProfilController(ProfilRepo profilRepo) {
-        this.profilRepo = profilRepo;
+    public ProfilController(ProfilService profilService) {
+        this.profilService = profilService;
     }
 
     @PostMapping
     public Profil createProfil(@RequestBody Profil profil) {
-        return profilRepo.save(profil);
+        return profilService.createProfil(profil);
     }
 
     @GetMapping("/{id}")
     public Profil getProfilById(@PathVariable Long id) {
-        return profilRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Profil non trouve avec id" + id));
+        return  profilService.getProfilById(id);
     }
 
     @GetMapping
     public List<Profil> getProfils() {
-        return profilRepo.findAll();
+        return profilService.getProfils();
     }
 
     @PutMapping("/{id}")
     public Profil updateProfil(@RequestBody Profil profilModifie, @PathVariable Long id) {
-        Profil profilExistant = getProfilById(id);
-
-        profilExistant.setFullname(profilModifie.getFullname());
-        profilExistant.setUtilisateur(profilModifie.getUtilisateur());
-        profilExistant.setMetier(profilModifie.getMetier());
-        return profilRepo.save(profilExistant);
+        return profilService.update(profilModifie, id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteProfil(@PathVariable Long id) {
-        profilRepo.deleteById(id);
+        profilService.deleteProfilById(id);
     }
 }

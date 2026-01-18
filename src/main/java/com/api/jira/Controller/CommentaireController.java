@@ -2,6 +2,7 @@ package com.api.jira.Controller;
 
 import com.api.jira.Entities.Commentaire;
 import com.api.jira.Repository.CommentaireRepo;
+import com.api.jira.Service.CommentaireService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -17,45 +18,34 @@ public class CommentaireController {
         modifier un commentaire
         supprimer un commentaire
      */
-    private final CommentaireRepo commentaireRepo;
-    public CommentaireController(CommentaireRepo commentaireRepo) {
-        this.commentaireRepo = commentaireRepo;
+    private final CommentaireService commentaireService;
+    public CommentaireController(CommentaireService commentaireService) {
+        this.commentaireService = commentaireService;
     }
 
     @PostMapping
     public Commentaire createCommentaire(@RequestBody Commentaire commentaire) {
-        if (commentaire.getCreationDate() == null) {
-            commentaire.setCreationDate(LocalDateTime.now());
-        }
-        return commentaireRepo.save(commentaire);
+        return  commentaireService.createCommentaire(commentaire);
     }
 
     @GetMapping
     public List<Commentaire> getAllCommentaires() {
-        return commentaireRepo.findAll();
+        return commentaireService.findAllCommentaire();
     }
 
     @GetMapping("/{id}")
     public Commentaire getCommentaireById(@PathVariable Long id) {
-        return commentaireRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Commentaire non trouvé avec id " + id));
+        return  commentaireService.findCommentaireById(id);
     }
 
     @PutMapping("/{id}")
     public Commentaire updateCommentaire(@PathVariable Long id,
                                          @RequestBody Commentaire commentaireModifie) {
-
-        Commentaire commentaireExistant = getCommentaireById(id);
-
-        commentaireExistant.setContenu(commentaireModifie.getContenu());
-        commentaireExistant.setAuteur(commentaireModifie.getAuteur());
-        commentaireExistant.setCommentaireTicket(commentaireModifie.getCommentaireTicket());
-
-        return commentaireRepo.save(commentaireExistant);
+        return commentaireService.updateCommentaire(id, commentaireModifie);
     }
 
     @DeleteMapping("/{id}")
     public void deleteCommentaire(@PathVariable Long id) {
-        commentaireRepo.deleteById(id);
+        commentaireService.deleteCommentaire(id);
     }
 }

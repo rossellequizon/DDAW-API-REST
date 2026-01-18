@@ -1,6 +1,7 @@
 package com.api.jira.Controller;
 import com.api.jira.Entities.Tag;
 import com.api.jira.Repository.TagRepo;
+import com.api.jira.Service.TagService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,41 +16,36 @@ public class TagController {
      modifier un tag
      supprimer un tag
   */
-    private final TagRepo tagRepo;
-    public TagController(TagRepo tagRepo) {
-        this.tagRepo = tagRepo;
+    private final TagService tagService;
+    public TagController(TagService tagService) {
+        this.tagService = tagService;
     }
 
     @PostMapping
     public Tag createTag(@RequestBody Tag tag) {
-        return tagRepo.save(tag);
+        return tagService.createTag(tag);
     }
 
     @GetMapping
     public List<Tag> getAllTags()
     {
-        return tagRepo.findAll();
+        return tagService.getAllTag();
     }
 
     @GetMapping("/{id}")
     public Tag getTagById(@PathVariable Long id) {
-        return tagRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tag non trouvé avec id " + id));
+        return tagService.getTag(id);
     }
 
     // modifier un tag (par ex. renommer ou changer la couleur)
     @PutMapping("/{id}")
     public Tag updateTag(@PathVariable Long id,
                          @RequestBody Tag tagModifie) {
-
-        Tag tagExistant = getTagById(id);
-
-        tagExistant.setTagName(tagModifie.getTagName());
-        return tagRepo.save(tagExistant);
+        return tagService.updateTag(id, tagModifie);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTag(@PathVariable Long id) {
-        tagRepo.deleteById(id);
+        tagService.deleteTag(id);
     }
 }
