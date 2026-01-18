@@ -1,4 +1,5 @@
 package com.api.jira.Entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jdk.jfr.DataAmount;
 import lombok.Data;
@@ -29,19 +30,24 @@ public class Utilisateur {
     private Boolean actif = true;
 
 
-    @OneToOne(mappedBy = "utilisateur", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Profil profil;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Projet> projetPossedes= new ArrayList<>();
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Tickets> Creatorickets = new ArrayList<>();
 
     @OneToMany(mappedBy = "assigne", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Tickets> assigneTickets = new ArrayList<>();
 
     @OneToMany(mappedBy = "auteur", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Commentaire> commentaire = new ArrayList<>();
 
     public Utilisateur() {}

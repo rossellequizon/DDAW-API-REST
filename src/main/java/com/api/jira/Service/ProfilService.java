@@ -1,7 +1,9 @@
 package com.api.jira.Service;
 
 import com.api.jira.Entities.Profil;
+import com.api.jira.Entities.Utilisateur;
 import com.api.jira.Repository.ProfilRepo;
+import com.api.jira.Repository.UtilisateurRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +13,18 @@ import java.util.List;
 @Transactional
 public class ProfilService {
     public final ProfilRepo profilRepo;
+    public final UtilisateurRepo utilisateurRepo;
 
-    public ProfilService(ProfilRepo profilRepo) {
+    public ProfilService(ProfilRepo profilRepo, UtilisateurRepo utilisateurRepo) {
         this.profilRepo = profilRepo;
+        this.utilisateurRepo = utilisateurRepo;
     }
 
     public Profil createProfil(Profil profil) {
+        Utilisateur u = utilisateurRepo.findById(profil.getUtilisateur().getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        profil.setUtilisateur(u);
         return profilRepo.save(profil);
     }
 

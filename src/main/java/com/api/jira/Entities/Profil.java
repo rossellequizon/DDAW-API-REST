@@ -8,7 +8,6 @@ import lombok.Data;
 @Table(name = "profil")
 public class Profil {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
@@ -19,7 +18,6 @@ public class Profil {
     private String metier;
 
     @OneToOne
-    @JsonIgnore
     @JoinColumn(name = "UTILISATEUR_ID", nullable = false, unique = true)
     private Utilisateur utilisateur;
 

@@ -1,6 +1,8 @@
 package com.api.jira.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -38,20 +40,22 @@ public class Tickets {
     private LocalDate deadline;
 
     @ManyToOne(optional = false) //1,1
-    @JsonIgnore
     @JoinColumn(name = "PROJET_ID", nullable = false)
     private Projet projet;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "CREATOR_ID", nullable = false)
+    @JsonIgnoreProperties({"pwd", "projets", "creatorTickets", "assigneTickets", "profil"})
     private Utilisateur creator;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "ASSIGNE_ID", nullable = false)
+    @JsonIgnoreProperties({"pwd", "projets", "creatorTickets", "assigneTickets", "profil"})
     private Utilisateur assigne;
 
     //relation 0,N avec ticket
     @OneToMany(mappedBy = "commentaireTicket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Commentaire> commentaire = new ArrayList<>();
 
     //association table TICKET TAG
@@ -61,19 +65,15 @@ public class Tickets {
             joinColumns = @JoinColumn(name = "TICKET_ID"), // FK vers l'id de ticket
             inverseJoinColumns = @JoinColumn(name = "TAG_ID") // FK vers l'id de tag
     )
+
+    @JsonIgnore
     private List<Tag> tags = new ArrayList<>();
 
     public Tickets() {}
-    public Tickets(Long id, String title, String ticketDescription, Status ticketStatus, Priority ticketPriority, LocalDateTime creationDate, LocalDate deadline, Projet projet, Utilisateur creator,  Utilisateur assignee) {
+    public Tickets(Long id, String title, String ticketDescription, LocalDate deadline) {
         this.id = id;
         this.title = title;
         this.ticketDescription = ticketDescription;
-        this.ticketStatus = ticketStatus;
-        this.ticketPriority = ticketPriority;
-        this.creationDate = creationDate;
         this.deadline = deadline;
-        this.projet = projet;
-        this.creator = creator;
-        this.assigne = assignee;
     }
 }

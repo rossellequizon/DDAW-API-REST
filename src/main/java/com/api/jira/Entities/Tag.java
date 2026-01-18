@@ -1,4 +1,5 @@
 package com.api.jira.Entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class Tag {
     private String tagName;
 
     @ManyToMany(mappedBy = "tags")
+    @JsonIgnore
     private Set<Tickets> tickets = new HashSet<>();
 
     public Tag() {

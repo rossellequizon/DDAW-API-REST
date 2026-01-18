@@ -30,6 +30,8 @@ public class TicketController {
 
     @PostMapping
     public Tickets createTicket(@RequestBody Tickets ticket) {
+
+        System.out.println("DEBUG ticket.projet=" + (ticket.getProjet() == null ? null : ticket.getProjet().getId()));
         return  ticketService.createTicket(ticket);
     }
 

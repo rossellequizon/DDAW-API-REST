@@ -35,6 +35,7 @@ public class Projet {
     private Utilisateur owner;
 
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Tickets> tickets = new ArrayList<>();
 
 
