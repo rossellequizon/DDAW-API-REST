@@ -1,10 +1,7 @@
 package com.api.jira.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jdk.jfr.DataAmount;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,15 +31,15 @@ public class Utilisateur {
     @JsonIgnore
     private Profil profil;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Projet> projetPossedes= new ArrayList<>();
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Tickets> Creatorickets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "assigne", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "assigne", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Tickets> assigneTickets = new ArrayList<>();
 

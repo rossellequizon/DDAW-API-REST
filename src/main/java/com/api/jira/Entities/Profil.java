@@ -1,4 +1,5 @@
 package com.api.jira.Entities;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,7 +19,8 @@ public class Profil {
     private String metier;
 
     @OneToOne
-    @JoinColumn(name = "UTILISATEUR_ID", nullable = false, unique = true)
+    @MapsId
+    @JoinColumn(name = "ID")
     private Utilisateur utilisateur;
 
     public Profil() {

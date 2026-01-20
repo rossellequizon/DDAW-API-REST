@@ -62,8 +62,9 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUtilisateur(@PathVariable Long id){
-        utilisateurService.delete(id);
+    public String deleteUtilisateur(@PathVariable Long id){
+        utilisateurService.deleteUtilisateur(id);
+        return "Utilisateur supprimé avec succès, id : " + id;
     }
 
 }

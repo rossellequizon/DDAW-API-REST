@@ -1,6 +1,7 @@
 package com.api.jira.Controller;
 
 import com.api.jira.Entities.Projet;
+import com.api.jira.Entities.ProjetDTO;
 import com.api.jira.Entities.Status;
 import com.api.jira.Entities.Tickets;
 import com.api.jira.Repository.ProjetRepo;
@@ -27,6 +28,16 @@ public class ProjetController {
         return projetService.createProjet(projet);
     }
 
+    @GetMapping("/DTO")
+    public List<ProjetDTO> getProjetsMinimal() {
+        return projetService.getAllProjetsMinimalDTO();
+    }
+
+    @GetMapping("/DTO/{id}")
+    public ProjetDTO getProjetMinimalDTOById(@PathVariable Long id) {
+        return projetService.getProjetMinimalDTOById(id);
+    }
+
     @GetMapping
     public List<Projet> getAllProjets() {
         return projetService.getAllProjets();
@@ -37,6 +48,10 @@ public class ProjetController {
         return projetService.getProjetById(id);
     }
 
+    @GetMapping("/status/{id}")
+    public Status getProjetStatusById(@PathVariable Long id) {
+        return projetService.getProjetStatus(id);
+    }
     @PutMapping("/{id}")
     public Projet updateProjet(@PathVariable Long id,
                                @RequestBody Projet projetModifie) {
@@ -45,10 +60,10 @@ public class ProjetController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProjet(@PathVariable Long id) {
+    public String deleteProjet(@PathVariable Long id) {
         projetService.deleteProjet(id);
+        return "Projet supprimé" +id + "avec succès";
     }
-
 
     @PatchMapping("/{id}/status")
     public Projet updateProjetStatus(@PathVariable Long id,

@@ -4,6 +4,8 @@ import com.api.jira.Entities.*;
 import com.api.jira.Repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,6 +54,23 @@ public class TicketService {
         return ticketRepo.save(ticket);
     }
 
+    public List<TicketDTO> getAllTicketsDTO() {
+        List<Tickets> tickets = ticketRepo.findAll();  // Récupère tous les tickets depuis la DB
+        List<TicketDTO> ticketDTOs = new ArrayList<>();
+
+        for (Tickets ticket : tickets) {
+            ticketDTOs.add(new TicketDTO(ticket)); // Crée un DTO pour chaque ticket
+        }
+        return ticketDTOs;
+    }
+
+    public TicketDTO getTicketDTOById(Long id) {
+        Tickets ticket = ticketRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket non trouvé avec id " + id));
+        return new TicketDTO(ticket);  // Retourne le DTO du ticket trouvé
+    }
+
+
     public List<Tickets> getAllTickets() {
         return ticketRepo.findAll();
     }
@@ -80,12 +99,28 @@ public class TicketService {
         ticketRepo.deleteById(id);
     }
 
+    public Status getTicketStatus(Long id) {
+        Tickets ticket = ticketRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Projet non trouvé avec id " + id));
+        return ticket.getTicketStatus();
+    }
     public Tickets updateStatus(Long id, Status status) {
         Tickets ticket = getTicketById(id);
         ticket.setTicketStatus(status);
         return ticketRepo.save(ticket);
     }
 
+    public Priority getTicketPriority(Long id) {
+        Tickets ticket = ticketRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Projet non trouvé aved id " + id));
+        return ticket.getTicketPriority();
+    }
+
+    public Tickets updateTicketPriority(Long id, Priority priority) {
+        Tickets ticket = getTicketById(id);
+        ticket.setTicketPriority(priority);
+        return ticketRepo.save(ticket);
+    }
     public Tickets updateTicketAssignee(Long id, Long userId) {
         Tickets ticket = getTicketById(id);
         Utilisateur utilisateur = utilisateurRepo.findById(userId)
@@ -101,16 +136,24 @@ public class TicketService {
 
     public Commentaire createCommentaire(Long id, Commentaire commentaire) {
         Tickets ticket = getTicketById(id);
+        // Vérifie que le contenu du commentaire n'est pas vide
         if (commentaire.getContenu() == null || commentaire.getContenu().isEmpty()) {
             throw new IllegalArgumentException("Le contenu du commentaire est requis");
         }
+        // Associer le commentaire au ticket
         commentaire.setCommentaireTicket(ticket);
-        if(commentaire.getAuteur() == null){
-            commentaire.setAuteur(ticket.getCreator());
+        // Vérifier et assigner l'auteur du commentaire
+        if (commentaire.getAuteur() == null) {
+            if (ticket.getCreator() != null) {
+                commentaire.setAuteur(ticket.getCreator()); // Associe l'auteur au créateur du ticket
+            } else {
+                throw new IllegalArgumentException("Le créateur du ticket est null");
+            }
         }
 
         return commentaireRepo.save(commentaire);
     }
+
 
     public Tickets addTagToTicket(Long id, Long tagId) {
         Tickets ticket = getTicketById(id);

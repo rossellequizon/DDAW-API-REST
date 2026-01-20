@@ -1,5 +1,6 @@
 package com.api.jira.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,7 +21,8 @@ public class Commentaire {
     @Column(name = "CREATION_DATE", nullable = false)
     private LocalDateTime creationDate =  LocalDateTime.now();
 
-    @ManyToOne(optional = false)
+    @JsonProperty("auteur")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AUTEUR_ID", nullable = false)
     private Utilisateur auteur;
 

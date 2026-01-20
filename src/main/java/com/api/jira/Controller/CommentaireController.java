@@ -23,10 +23,11 @@ public class CommentaireController {
         this.commentaireService = commentaireService;
     }
 
-    @PostMapping
-    public Commentaire createCommentaire(@RequestBody Commentaire commentaire) {
-        return  commentaireService.createCommentaire(commentaire);
+    @PostMapping("/ticket/{ticketId}")
+    public Commentaire createCommentaire(@PathVariable Long ticketId, @RequestBody Commentaire commentaire) {
+        return commentaireService.createCommentaire(ticketId, commentaire);
     }
+
 
     @GetMapping
     public List<Commentaire> getAllCommentaires() {
@@ -45,7 +46,9 @@ public class CommentaireController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCommentaire(@PathVariable Long id) {
+    public String deleteCommentaire(@PathVariable Long id) {
         commentaireService.deleteCommentaire(id);
+        return "Commentaire supprimé id, avec succès : " + id;
+
     }
 }

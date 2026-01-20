@@ -5,6 +5,8 @@ package com.api.jira.Service;
 import com.api.jira.Entities.Projet;
 import com.api.jira.Entities.Tickets;
 import com.api.jira.Entities.Utilisateur;
+import com.api.jira.Repository.ProjetRepo;
+import com.api.jira.Repository.TicketRepo;
 import com.api.jira.Repository.UtilisateurRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +17,14 @@ import java.util.List;
 @Transactional
 public class UtilisateurService {
     private final UtilisateurRepo utilisateurRepo;
+    private final TicketRepo ticketRepo;
+    private final ProjetRepo projetRepo;
 
-    public UtilisateurService(UtilisateurRepo utilisateurRepo) {
+    public UtilisateurService(UtilisateurRepo utilisateurRepo, TicketRepo ticketRepo, ProjetRepo projetRepo) {
         this.utilisateurRepo = utilisateurRepo;
+        this.ticketRepo = ticketRepo;
+        this.projetRepo = projetRepo;
+
     }
 
     // comment rendr le nom d'utilisateur unique
@@ -68,17 +75,18 @@ public class UtilisateurService {
         return user.getAssigneTickets();
     }
 
+
     public Utilisateur update(Long id, Utilisateur utilisateurModifie) {
         Utilisateur existing = findById(id);
 
-        if (!existing.getUsername().equals(utilisateurModifie.getUsername())
-                && utilisateurRepo.existsByUsername(utilisateurModifie.getUsername())) {
-            throw new IllegalArgumentException("Username déjà utilisé");
+        if(!utilisateurModifie.getEmail().contains("@")){
+            throw new IllegalArgumentException("Email invalide");
         }
-
-        if (!existing.getEmail().equals(utilisateurModifie.getEmail())
-                && utilisateurRepo.existsByEmail(utilisateurModifie.getEmail())) {
-            throw new IllegalArgumentException("Email déjà utilisé");
+        if (utilisateurRepo.existsByUsername(utilisateurModifie.getUsername())) {
+            throw new IllegalArgumentException("Le nom d'utilisateur est existe déjà");
+        }
+        if (utilisateurRepo.existsByEmail(utilisateurModifie.getEmail())) {
+            throw new IllegalArgumentException("L'email est existe déjà");
         }
         existing.setUsername(utilisateurModifie.getUsername());
         existing.setEmail(utilisateurModifie.getEmail());
@@ -88,11 +96,48 @@ public class UtilisateurService {
         return utilisateurRepo.save(existing);
     }
 
-    public void delete(Long id) {
+    //supprimer totalement l'utilisateur de la bdd
+    /*public void deleteUtilisateur(Long id) {
         if (!utilisateurRepo.existsById(id)) {
             throw new RuntimeException("Utilisateur non trouvé avec l'id : " + id);
         }
         utilisateurRepo.deleteById(id);
+    }*/
+
+    public void deleteUtilisateur(Long id) {
+
+        Utilisateur user = utilisateurRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec id " + id));
+
+        // utilisateur doit exister en base
+        Utilisateur deletedUser = utilisateurRepo.findByUsername("deleted_user")
+                .orElseThrow(() -> new RuntimeException(
+                        "Utilisateur système 'deleted_user' manquant en base"
+                ));
+
+        //assigne = null
+        List<Tickets> ticketsAssignes = ticketRepo.findByAssigne(user);
+        for (Tickets ticket : ticketsAssignes) {
+            ticket.setAssigne(null);
+            ticketRepo.save(ticket);
+        }
+
+        //creator = deleted_user
+        List<Tickets> ticketsCrees = ticketRepo.findByCreator(user);
+        for (Tickets ticket : ticketsCrees) {
+            ticket.setCreator(deletedUser);
+            ticketRepo.save(ticket);
+        }
+        // owner = deleted_user
+        List<Projet> projets = projetRepo.findByOwner(user);
+        for (Projet projet : projets) {
+            projet.setOwner(deletedUser);
+            projetRepo.save(projet);
+        }
+
+        // Suppression finale de l'utilisateur
+        utilisateurRepo.delete(user);
     }
+
 
 }

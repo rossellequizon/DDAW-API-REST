@@ -1,6 +1,7 @@
 package com.api.jira.Controller;
 
 import com.api.jira.Entities.Profil;
+import com.api.jira.Entities.ProfilDTO;
 import com.api.jira.Repository.ProfilRepo;
 import com.api.jira.Service.ProfilService;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,19 @@ public class ProfilController {
         this.profilService = profilService;
     }
 
-    @PostMapping
-    public Profil createProfil(@RequestBody Profil profil) {
-        return profilService.createProfil(profil);
+    @PostMapping("/utilisateur/{userId}")
+    public Profil createProfil(@PathVariable Long userId, @RequestBody Profil profil) {
+        return profilService.createProfil(userId, profil);
+    }
+
+    @GetMapping("/DTO/{id}")
+    public ProfilDTO getProfilDTO(@PathVariable Long id) {
+        return profilService.getProfilDTO(id);
+    }
+
+    @GetMapping("/DTO")
+    public List<ProfilDTO> getAllProfilDTO() {
+        return profilService.getAllProfilDTO();
     }
 
     @GetMapping("/{id}")
@@ -44,7 +55,9 @@ public class ProfilController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProfil(@PathVariable Long id) {
+    public String deleteProfil(@PathVariable Long id) {
         profilService.deleteProfilById(id);
+        return "Profil supprimé id, avec succès : " + id;
+
     }
 }

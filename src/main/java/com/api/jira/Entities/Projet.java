@@ -1,5 +1,6 @@
 package com.api.jira.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.JoinColumnOrFormula;
@@ -30,8 +31,8 @@ public class Projet {
     private Status projetStatus = Status.TODO;
 
     @ManyToOne(optional = false)
+    @JsonIgnoreProperties({"pwd", "projets", "creatorTickets", "assigneTickets", "profil"})
     @JoinColumn(name = "OWNER_ID", nullable = false)
-    @JsonIgnore
     private Utilisateur owner;
 
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)

@@ -39,7 +39,7 @@ public class Tickets {
     @Column(name = "DEADLINE")
     private LocalDate deadline;
 
-    @ManyToOne(optional = false) //1,1
+    @ManyToOne(optional = false) //N,1
     @JoinColumn(name = "PROJET_ID", nullable = false)
     private Projet projet;
 
@@ -48,8 +48,8 @@ public class Tickets {
     @JsonIgnoreProperties({"pwd", "projets", "creatorTickets", "assigneTickets", "profil"})
     private Utilisateur creator;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ASSIGNE_ID", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "ASSIGNE_ID", nullable = true)
     @JsonIgnoreProperties({"pwd", "projets", "creatorTickets", "assigneTickets", "profil"})
     private Utilisateur assigne;
 
