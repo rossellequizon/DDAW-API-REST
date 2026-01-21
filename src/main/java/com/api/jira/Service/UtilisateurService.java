@@ -27,7 +27,6 @@ public class UtilisateurService {
 
     }
 
-    // comment rendr le nom d'utilisateur unique
     public Utilisateur create(Utilisateur utilisateur) {
         if(utilisateur.getUsername() == null || utilisateur.getUsername().isEmpty()){
             throw new IllegalArgumentException("Le nom d'utilisateur est requis");
@@ -96,14 +95,6 @@ public class UtilisateurService {
         return utilisateurRepo.save(existing);
     }
 
-    //supprimer totalement l'utilisateur de la bdd
-    /*public void deleteUtilisateur(Long id) {
-        if (!utilisateurRepo.existsById(id)) {
-            throw new RuntimeException("Utilisateur non trouvé avec l'id : " + id);
-        }
-        utilisateurRepo.deleteById(id);
-    }*/
-
     public void deleteUtilisateur(Long id) {
 
         Utilisateur user = utilisateurRepo.findById(id)
@@ -138,6 +129,4 @@ public class UtilisateurService {
         // Suppression finale de l'utilisateur
         utilisateurRepo.delete(user);
     }
-
-
 }

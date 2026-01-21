@@ -33,7 +33,6 @@ public class TicketController {
         return  ticketService.createTicket(ticket);
     }
 
-
     @GetMapping("/DTO")
     public List<TicketDTO> getTickets() {
         return ticketService.getAllTicketsDTO();
@@ -107,7 +106,6 @@ public class TicketController {
     @DeleteMapping("/tags/{id}/{tagId}")
     public Tickets removeTagFromTicket(@PathVariable Long id,
                                        @PathVariable Long tagId) {
-
         return ticketService.removeTagFromTicket(id, tagId);
     }
 }

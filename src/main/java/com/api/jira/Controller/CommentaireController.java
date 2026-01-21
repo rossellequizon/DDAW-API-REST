@@ -28,7 +28,6 @@ public class CommentaireController {
         return commentaireService.createCommentaire(ticketId, commentaire);
     }
 
-
     @GetMapping
     public List<Commentaire> getAllCommentaires() {
         return commentaireService.findAllCommentaire();
@@ -48,7 +47,7 @@ public class CommentaireController {
     @DeleteMapping("/{id}")
     public String deleteCommentaire(@PathVariable Long id) {
         commentaireService.deleteCommentaire(id);
-        return "Commentaire supprimé id, avec succès : " + id;
+        return "Commentaire supprimé" + id + "avec succès";
 
     }
 }

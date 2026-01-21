@@ -55,11 +55,11 @@ public class TicketService {
     }
 
     public List<TicketDTO> getAllTicketsDTO() {
-        List<Tickets> tickets = ticketRepo.findAll();  // Récupère tous les tickets depuis la DB
+        List<Tickets> tickets = ticketRepo.findAll();
         List<TicketDTO> ticketDTOs = new ArrayList<>();
 
         for (Tickets ticket : tickets) {
-            ticketDTOs.add(new TicketDTO(ticket)); // Crée un DTO pour chaque ticket
+            ticketDTOs.add(new TicketDTO(ticket));
         }
         return ticketDTOs;
     }
@@ -67,7 +67,7 @@ public class TicketService {
     public TicketDTO getTicketDTOById(Long id) {
         Tickets ticket = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ticket non trouvé avec id " + id));
-        return new TicketDTO(ticket);  // Retourne le DTO du ticket trouvé
+        return new TicketDTO(ticket);
     }
 
 
@@ -136,21 +136,23 @@ public class TicketService {
 
     public Commentaire createCommentaire(Long id, Commentaire commentaire) {
         Tickets ticket = getTicketById(id);
-        // Vérifie que le contenu du commentaire n'est pas vide
         if (commentaire.getContenu() == null || commentaire.getContenu().isEmpty()) {
             throw new IllegalArgumentException("Le contenu du commentaire est requis");
         }
-        // Associer le commentaire au ticket
         commentaire.setCommentaireTicket(ticket);
+
         // Vérifier et assigner l'auteur du commentaire
         if (commentaire.getAuteur() == null) {
-            if (ticket.getCreator() != null) {
-                commentaire.setAuteur(ticket.getCreator()); // Associe l'auteur au créateur du ticket
+            // Si l'auteur est nul, on vérifie si l'ID de l'auteur existe
+            if (ticket.getCreator() != null && ticket.getCreator().getId() != null) {
+                // Vérifier si le créateur existe
+                Utilisateur auteur = utilisateurRepo.findById(ticket.getCreator().getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Le créateur du ticket est introuvable"));
+                commentaire.setAuteur(auteur);
             } else {
-                throw new IllegalArgumentException("Le créateur du ticket est null");
+                throw new IllegalArgumentException("Le créateur du ticket est null ou introuvable");
             }
         }
-
         return commentaireRepo.save(commentaire);
     }
 

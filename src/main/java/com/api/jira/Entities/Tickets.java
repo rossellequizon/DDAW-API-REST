@@ -65,8 +65,6 @@ public class Tickets {
             joinColumns = @JoinColumn(name = "TICKET_ID"), // FK vers l'id de ticket
             inverseJoinColumns = @JoinColumn(name = "TAG_ID") // FK vers l'id de tag
     )
-
-    @JsonIgnore
     private List<Tag> tags = new ArrayList<>();
 
     public Tickets() {}

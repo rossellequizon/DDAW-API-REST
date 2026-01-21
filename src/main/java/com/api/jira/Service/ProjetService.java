@@ -61,11 +61,11 @@ public class ProjetService {
     }
 
     public List<ProjetDTO> getAllProjetsMinimalDTO() {
-        List<Projet> projets = projetRepo.findAll();  // Récupère tous les projets depuis la DB
+        List<Projet> projets = projetRepo.findAll();
         List<ProjetDTO> projetMinimalDTOs = new ArrayList<>();
 
         for (Projet projet : projets) {
-            projetMinimalDTOs.add(new ProjetDTO(projet)); // Crée un DTO minimal pour chaque projet
+            projetMinimalDTOs.add(new ProjetDTO(projet));
         }
         return projetMinimalDTOs;
     }
@@ -73,7 +73,7 @@ public class ProjetService {
     public ProjetDTO getProjetMinimalDTOById(Long id) {
         Projet projet = projetRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé avec id " + id));
-        return new ProjetDTO(projet);  // Retourne le DTO minimal du projet trouvé
+        return new ProjetDTO(projet);
     }
 
     public Projet updateProjet(Long id, Projet projetModifie) {

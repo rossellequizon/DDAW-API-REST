@@ -1,5 +1,6 @@
 package com.api.jira.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.ArrayList;
@@ -14,13 +15,16 @@ public class Utilisateur {
     @Column(name = "ID")
     private Long id;
 
+    @JsonProperty("username")
     @Column(name = "USERNAME",  nullable = false, unique = true, length = 50)
     private String username;
 
+    @JsonProperty("email")
     @Column(name = "EMAIL",  nullable = false, unique = true, length = 100)
     private String email;
 
     @Column(name = "PWD",  nullable = false, length = 100)
+    @JsonIgnore
     private String pwd;
 
     @Column(name = "ACTIF", nullable = false)

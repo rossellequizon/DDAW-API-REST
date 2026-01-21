@@ -32,7 +32,6 @@ public class CommentaireService {
         Tickets ticket = ticketRepo.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket non trouvé avec id " + ticketId));
 
-        // si tu veux sécuriser l'auteur (optionnel mais conseillé)
         if (commentaire.getAuteur() == null || commentaire.getAuteur().getId() == null) {
             throw new RuntimeException("Auteur requis (auteur.id)");
         }
