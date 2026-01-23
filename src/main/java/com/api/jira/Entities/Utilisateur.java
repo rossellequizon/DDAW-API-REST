@@ -24,7 +24,7 @@ public class Utilisateur {
     private String email;
 
     @Column(name = "PWD",  nullable = false, length = 100)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pwd;
 
     @Column(name = "ACTIF", nullable = false)

@@ -5,6 +5,8 @@ import com.api.jira.Entities.Tickets;
 import com.api.jira.Entities.Utilisateur;
 import com.api.jira.Repository.UtilisateurRepo;
 import com.api.jira.Service.UtilisateurService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

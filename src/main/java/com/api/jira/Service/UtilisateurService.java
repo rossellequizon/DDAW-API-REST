@@ -35,7 +35,7 @@ public class UtilisateurService {
             throw new IllegalArgumentException("L'eamil est requis");
         }
         if(utilisateur.getPwd() == null || utilisateur.getPwd().isEmpty()){
-            throw new IllegalArgumentException("La password est requis");
+            throw new IllegalArgumentException("Le password est requis");
         }
         if(!utilisateur.getEmail().contains("@")){
             throw new IllegalArgumentException("Email invalide");
