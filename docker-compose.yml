@@ -25,6 +25,9 @@ services:
 
   app:
     image: merlinaarul/jira-api:latest
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     container_name: jira-api
     ports:
       - "8080:8080"
