@@ -53,18 +53,10 @@ Les entités Java sont situées dans :
 ---
 
 ## 3. Lancement du projet
+1. Se placer dans le répertoire du projet télécharger
+2. image backend : docker pull merlinaarul/jira-api:latest
+3. Lancer docker-compose up
 
-Configurer MySQL dans `application.properties`, puis :
-
-```bash
-./mvnw spring-boot:run
-```
-
-L’API est disponible sur :
-
-```
-http://localhost:8080
-```
 
 ---
 
