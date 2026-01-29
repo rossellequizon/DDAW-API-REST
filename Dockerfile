@@ -1,21 +1,13 @@
-# Utiliser une image de base OpenJDK (par exemple, OpenJDK 21)
-FROM eclipse-temurin:21-jdk
-
-# Définir le répertoire de travail dans le conteneur
+# Étape 1 : Construire le JAR
+FROM maven:3.8.4-openjdk-17 AS builder
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copier le fichier JAR généré dans le conteneur
-COPY target/jira-0.0.1-SNAPSHOT.jar /app/jira-api.jar
-
-# Copier le fichier .env et le script start.sh dans le conteneur
-COPY .env /app/.env
-COPY start.sh /app/start.sh
-
-# Donner les permissions d'exécution au script
-RUN chmod +x /app/start.sh
-
-# Exposer le port 8080 pour l'application
+# Étape 2 : Créer l'image finale
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Définir le point d'entrée pour exécuter le script start.sh
-ENTRYPOINT ["/app/start.sh"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
