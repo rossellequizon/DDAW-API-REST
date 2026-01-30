@@ -57,7 +57,7 @@ Les entités Java sont situées dans :
 1. Se placer dans le répertoire de docker-compose.yml
 2. image backend : `docker pull merlinaarul/jira-api:latest`
 3. Lancer `docker-compose up`
-[Télécharger le projet en ZIP](docker-compose.zip)
+[Télécharger le docker-compose.yml en ZIP](docker-compose.zip)
 
 ---
 
